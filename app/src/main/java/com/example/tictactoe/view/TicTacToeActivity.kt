@@ -1,4 +1,4 @@
-package com.example.tictactoe.controller
+package com.example.tictactoe.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,11 +8,10 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.tictactoe.R
 import com.example.tictactoe.model.Board
-import com.example.tictactoe.model.Cell
-import com.example.tictactoe.model.Player
+import com.example.tictactoe.presenter.TicTacToePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(){
+class TicTacToeActivity : AppCompatActivity(), TicTacToeView{
     private var model: Board? = null
 
     /*** View */
@@ -20,13 +19,14 @@ class MainActivity : AppCompatActivity(){
     private lateinit var winPlayerViewGroup: View
     private lateinit var winPlayerLabel: TextView
 
+    private val presenter = TicTacToePresenter(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         winPlayerLabel = winnerPlayerLabel
         winPlayerViewGroup = winnerPlayerViewGroup
         btnGrid = buttonGrid
-        model = Board()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(){
         return when(item.itemId){
             R.id.action_reset -> {
                 model?.restart()
-                resetView()
+                presenter.onResetSelected()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -53,35 +53,31 @@ class MainActivity : AppCompatActivity(){
         val col = Integer.valueOf(tag.substring(1,2))
         Log.i("board", "Click Row: [$row,$col]")
 
-        val playerThatMoved = model?.mark(row, col)
-        Log.d("player",playerThatMoved.toString())
-        if (playerThatMoved != null){
-            (v as Button).text = playerThatMoved.toString()
-            if (model?.getWinner() != null) {
-                winPlayerLabel.text = playerThatMoved.toString()
-                winPlayerViewGroup.visibility = View.VISIBLE
-            }
-        }
+        presenter.onButtonSelected(row,col)
     }
 
-    fun resetView(){
-        winPlayerViewGroup.visibility = View.GONE
-        winPlayerLabel.text = ""
+    override fun showWinner(winningPlayerLabel: String) {
+        winPlayerLabel.text = winningPlayerLabel
+        winPlayerViewGroup.visibility = View.VISIBLE
+    }
 
-        for (i in 0 until buttonGrid.childCount) {
+    override fun clearWinnerDisplay() {
+        winPlayerLabel.text = ""
+        winPlayerViewGroup.visibility = View.GONE
+    }
+
+    override fun clearButtons() {
+        for (i in 0 until buttonGrid.childCount){
             (buttonGrid.getChildAt(i) as Button).text = ""
         }
     }
 
-
-
-
-
-
-
-
-
-
+    override fun setButtonText(row: Int, col: Int, text: String) {
+        val btn = buttonGrid.findViewWithTag<Button>(""+row+col)
+        if (btn != null){
+            btn.text = text
+        }
+    }
 
 
 }

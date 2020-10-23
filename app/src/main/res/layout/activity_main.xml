@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".controller.MainActivity">
+    tools:context=".view.TicTacToeActivity">
 
     <GridLayout
         android:id="@+id/buttonGrid"
