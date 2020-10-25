@@ -8,7 +8,7 @@ class Board {
 
     enum class GameState { IN_PROGRESS, FINISHED }
 
-    private lateinit var currentTurn: Player
+    private var currentTurn: Player = Player.X
 
     //mark which player is the winner
     private var winner: Player? = null
