@@ -8,8 +8,10 @@ import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import com.example.tictactoe.R
 import com.example.tictactoe.databinding.ActivityMainBinding
+import com.example.tictactoe.model.Board
 import com.example.tictactoe.viewmodel.TicTacToeViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class TicTacToeActivity : AppCompatActivity(){
 
@@ -19,6 +21,9 @@ class TicTacToeActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         binding.viewModel = viewModel
+//        viewModel.getBoard().observe(this, Observer<Board>{
+//
+//        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
